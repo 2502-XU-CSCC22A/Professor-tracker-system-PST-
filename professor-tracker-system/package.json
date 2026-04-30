@@ -1,0 +1,10 @@
+{
+  "name": "professor-tracker-system-runner",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "npm --prefix ..\\backend run dev",
+    "dev:backend": "npm --prefix ..\\backend run dev",
+    "dev:frontend": "npm --prefix ..\\frontend run dev"
+  }
+}

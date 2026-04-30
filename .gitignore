@@ -1,0 +1,8 @@
+faculty-scheduler/
+test/
+test Db/
+cheatdb/
+*.zip
+node_modules/
+dist/
+build/
