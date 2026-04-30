@@ -55,9 +55,9 @@ const ScheduleModal = ({ onClose, onSuccess }) => {
 
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 w-full max-w-md">
+      <div className="bg-white rounded-[2rem] p-8 shadow-2xl border border-gray-100 w-full max-w-md">
         <div className="flex justify-between items-center mb-6">
-          <h3 className="text-xl font-bold text-[#14234b]">Add Schedule</h3>
+          <h3 className="text-xl font-bold text-gray-800">Add Schedule</h3>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
             <X size={22} />
           </button>
@@ -77,7 +77,7 @@ const ScheduleModal = ({ onClose, onSuccess }) => {
               value={form.subject}
               onChange={handleChange}
               placeholder="e.g. Microbiology II"
-              className="w-full px-4 py-3 bg-[#f8fafc] border border-gray-200 rounded-xl text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#14234b] focus:ring-2 focus:ring-[#14234b]/10 transition-all"
+              className="w-full px-4 py-3 bg-gray-100 border border-transparent rounded-xl text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all"
             />
           </div>
 
@@ -88,7 +88,7 @@ const ScheduleModal = ({ onClose, onSuccess }) => {
               value={form.room}
               onChange={handleChange}
               placeholder="e.g. FH201"
-              className="w-full px-4 py-3 bg-[#f8fafc] border border-gray-200 rounded-xl text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#14234b] focus:ring-2 focus:ring-[#14234b]/10 transition-all"
+              className="w-full px-4 py-3 bg-gray-100 border border-transparent rounded-xl text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all"
             />
           </div>
 
@@ -99,7 +99,7 @@ const ScheduleModal = ({ onClose, onSuccess }) => {
               name="startTime"
               value={form.startTime}
               onChange={handleChange}
-              className="w-full px-4 py-3 bg-[#f8fafc] border border-gray-200 rounded-xl text-sm text-gray-800 focus:outline-none focus:border-[#14234b] focus:ring-2 focus:ring-[#14234b]/10 transition-all"
+              className="w-full px-4 py-3 bg-gray-100 border border-transparent rounded-xl text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all"
             />
           </div>
 
@@ -110,7 +110,7 @@ const ScheduleModal = ({ onClose, onSuccess }) => {
               name="endTime"
               value={form.endTime}
               onChange={handleChange}
-              className="w-full px-4 py-3 bg-[#f8fafc] border border-gray-200 rounded-xl text-sm text-gray-800 focus:outline-none focus:border-[#14234b] focus:ring-2 focus:ring-[#14234b]/10 transition-all"
+              className="w-full px-4 py-3 bg-gray-100 border border-transparent rounded-xl text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all"
             />
           </div>
 
@@ -120,7 +120,7 @@ const ScheduleModal = ({ onClose, onSuccess }) => {
               name="day"
               value={form.day}
               onChange={handleChange}
-              className="w-full px-4 py-3 bg-[#f8fafc] border border-gray-200 rounded-xl text-sm text-gray-800 focus:outline-none focus:border-[#14234b] focus:ring-2 focus:ring-[#14234b]/10 transition-all"
+              className="w-full px-4 py-3 bg-gray-100 border border-transparent rounded-xl text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all"
             >
               <option value="">Select a day</option>
               {DAYS.map((d) => (
@@ -135,7 +135,7 @@ const ScheduleModal = ({ onClose, onSuccess }) => {
               name="type"
               value={form.type}
               onChange={handleChange}
-              className="w-full px-4 py-3 bg-[#f8fafc] border border-gray-200 rounded-xl text-sm text-gray-800 focus:outline-none focus:border-[#14234b] focus:ring-2 focus:ring-[#14234b]/10 transition-all"
+              className="w-full px-4 py-3 bg-gray-100 border border-transparent rounded-xl text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all"
             >
               <option value="">Select a type</option>
               {TYPES.map((item) => (
@@ -155,7 +155,7 @@ const ScheduleModal = ({ onClose, onSuccess }) => {
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 py-3 rounded-xl bg-[#14234b] hover:bg-[#1e3470] text-white font-bold text-sm transition-colors disabled:opacity-60"
+              className="flex-1 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm transition-colors disabled:opacity-60"
             >
               {loading ? "Saving..." : "Save Schedule"}
             </button>
