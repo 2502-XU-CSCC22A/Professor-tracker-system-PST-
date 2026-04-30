@@ -6,7 +6,7 @@ import SearchProfessorPage from "./pages/SearchProfessorPage";
 import PrivateRoute from "./components/PrivateRoute";
 import MainPage from "./pages/MainPage";
 import AdminDashboard from "./pages/AdminDashboard";
-
+//test comment
 function App() {
   return (
     <BrowserRouter>
