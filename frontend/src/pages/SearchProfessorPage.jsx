@@ -110,17 +110,20 @@ const SearchProfessorPage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#eef1f8] p-8 font-sans">
-      <div className="max-w-6xl mx-auto space-y-8">
-        <div className="bg-white rounded-2xl p-6 shadow-sm flex flex-col md:flex-row justify-between items-center border border-gray-50">
+    <div className="min-h-screen p-6 md:p-8 font-sans">
+      <div className="max-w-7xl mx-auto space-y-10">
+        <div className="bg-white rounded-[25px] p-6 shadow-md flex flex-col md:flex-row justify-between items-center border border-gray-50">
           <div className="flex items-center gap-6">
+            <div className="w-14 h-14 flex items-center justify-center font-black text-blue-600 bg-gray-100 rounded-full text-xl">
+              {displayName.charAt(0)}
+            </div>
             <div>
-              <h1 className="text-3xl font-bold text-[#14234b]">{displayName}</h1>
+              <h1 className="text-3xl font-bold text-gray-800">{displayName}</h1>
               <div className="flex items-center gap-2 text-gray-500 mt-1 mb-2 text-sm">
                 <Building2 size={16} />
                 <span>Department of {departmentName}</span>
               </div>
-              <span className="bg-[#e4ebfa] text-[#4a6bdf] px-3 py-1 rounded-full text-xs font-semibold">
+              <span className="bg-gray-100 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold">
                 Tenured Professor
               </span>
             </div>
@@ -141,16 +144,16 @@ const SearchProfessorPage = () => {
           <button
             type="button"
             onClick={() => navigate("/")}
-            className="flex items-center gap-2 bg-white hover:bg-gray-50 text-[#14234b] px-5 py-2.5 rounded-xl shadow-sm border border-gray-100 transition-all font-semibold text-sm"
+            className="flex items-center gap-2 bg-white hover:bg-gray-50 text-gray-800 hover:text-blue-600 px-5 py-2.5 rounded-lg shadow-md border border-gray-100 transition-all font-semibold text-sm"
           >
             <ArrowLeft size={18} />
             Back
           </button>
         </div>
 
-        <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-50">
+        <div className="bg-white rounded-[35px] p-8 shadow-2xl border border-gray-50">
           <div className="flex justify-between items-center mb-8">
-            <h3 className="text-2xl font-bold text-[#14234b]">Class Schedule</h3>
+            <h3 className="text-2xl font-black text-gray-800">Class Schedule</h3>
             <div className="flex items-center gap-2 text-gray-500 font-medium text-sm">
               <Calendar size={18} />
               {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
@@ -177,7 +180,7 @@ const SearchProfessorPage = () => {
 
                   <div className="flex-1 rounded-xl p-5 flex flex-col md:flex-row justify-between items-start md:items-center border border-gray-100 bg-white text-left">
                     <div>
-                      <h4 className="text-lg font-bold text-[#14234b] mb-2">{item.subject}</h4>
+                      <h4 className="text-lg font-bold text-gray-800 mb-2">{item.subject}</h4>
                       <div className="flex gap-5 text-gray-500 text-sm font-medium">
                         <span className="flex items-center gap-1.5">
                           <MapPin size={16} className="text-gray-400" />

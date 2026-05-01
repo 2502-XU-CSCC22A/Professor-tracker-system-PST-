@@ -5,13 +5,22 @@ import ProfessorPage from "./pages/ProfessorPage";
 import SearchProfessorPage from "./pages/SearchProfessorPage";
 import PrivateRoute from "./components/PrivateRoute";
 import MainPage from "./pages/MainPage";
-
+import AdminDashboard from "./pages/AdminDashboard";
+//test comment
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* root redirects to login */}
+       
         <Route path="/" element={<MainPage />} />
+        <Route
+              path="/admin"
+              element={
+                <PrivateRoute>
+                  <AdminDashboard />
+                </PrivateRoute>
+              }
+            />
 
         {/* public */}
         <Route path="/login" element={<Login />} />
@@ -31,7 +40,7 @@ function App() {
           element={<SearchProfessorPage />}
         />
 
-        {/* fallback: redirect any unknown path to login */}
+        {/* redirect any unknown path to login */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>

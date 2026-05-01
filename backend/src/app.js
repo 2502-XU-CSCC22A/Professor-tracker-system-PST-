@@ -6,7 +6,7 @@ const app = express();
 
 app.use(express.json());
 
-// Allow only your frontend origin (recommended)
+
 app.use(cors({
   origin: "http://localhost:5173",
   methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
@@ -14,8 +14,7 @@ app.use(cors({
   credentials: true
 }));
 
-// Or to allow any origin (development only)
-// app.use(cors());
+
 
 import userRouter from './routes/user.route.js';
 import schedulesRouter from './routes/schedule.routes.js';

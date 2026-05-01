@@ -5,6 +5,24 @@ const normalizeScheduleType = (value = "") => String(value).trim().toLowerCase()
 const VALID_TYPES = new Set(["lab", "lecture"]);
 const escapeRegExp = (value = "") => String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
+const timeToMinutes = (time) => {
+  const [hour, minute] = time.split(":").map(Number);
+  return hour * 60 + minute;
+};
+
+const parseTimeRange = (timeRange) => {
+  const [start, end] = timeRange.split("-").map((t) => t.trim());
+
+  if (!start || !end) return null;
+
+  return {
+    start,
+    end,
+    startMinutes: timeToMinutes(start),
+    endMinutes: timeToMinutes(end),
+  };
+};
+
 //create schedule
 
 const createSchedule = async (req, res) => {
@@ -23,6 +41,50 @@ const createSchedule = async (req, res) => {
                 message: "Type must be either lab or lecture"
             });
         }
+        const parsedNewTime = parseTimeRange(time);
+
+        if (!parsedNewTime) {
+            return res.status(400).json({
+             message: "Invalid time format. Use HH:mm - HH:mm",
+         });
+      }
+
+        if (parsedNewTime.startMinutes >= parsedNewTime.endMinutes) {
+          return res.status(400).json({
+          message: "Start time must be earlier than end time",
+        });
+      }
+
+      const existingSchedules = await Schedule.find({
+       username: req.user.username,
+       day: normalizedDay,
+      });
+
+       const hasOverlap = existingSchedules.some((schedule) => {
+        const parsedExistingTime = parseTimeRange(schedule.time);
+          if (!parsedExistingTime) return false;
+
+       const overlaps =
+         parsedNewTime.startMinutes < parsedExistingTime.endMinutes &&
+         parsedNewTime.endMinutes > parsedExistingTime.startMinutes;
+
+       if (overlaps) {
+        console.log("OVERLAP FOUND", {
+          existing: schedule.time,
+          incoming: time,
+         });
+       }
+
+        return overlaps;
+       });
+
+      if (hasOverlap) {
+        console.log("BLOCKED: Overlap detected");
+
+        return res.status(409).json({
+        message: "Schedule overlaps with an existing schedule",
+        });
+       }
 
         const schedule = await Schedule.create({
             username: req.user.username,

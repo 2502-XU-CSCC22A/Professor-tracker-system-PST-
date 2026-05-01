@@ -18,6 +18,7 @@ import ScheduleEditModal from "../components/ScheduleEditModal";
 import StatusModal from "../components/StatusModal";
 import { formatScheduleTimeRange, parseScheduleTimeRange } from "../utils/scheduleTime";
 
+
 const formatDepartment = (department = "") =>
   String(department)
     .trim()
@@ -63,14 +64,28 @@ const ProfessorPage = () => {
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState(null);
 
+<<<<<<< HEAD
   const refreshUser = () => {
     setUser(getUser());
   };
+=======
+  // If user is ADMIN and not normal faculty, go back to login. (para for extra safety ra ni)
+  useEffect(() => {
+ 
+    if (!user || user.department?.toUpperCase() === "ADMIN") {
+      navigate("/login", { replace: true }); 
+    }
+  }, [user, navigate]);
+>>>>>>> ee7bc6c2a19f432118cdeb4ed7f6876d5a04bad9
 
   const handleLogout = async () => {
     try {
       await api.post("/users/logout", { username: user?.username });
     } catch {
+<<<<<<< HEAD
+=======
+   
+>>>>>>> ee7bc6c2a19f432118cdeb4ed7f6876d5a04bad9
     } finally {
       clearToken();
       clearUser();
@@ -81,7 +96,11 @@ const ProfessorPage = () => {
   const displayName = user ? `${user.firstName} ${user.lastName}` : "Professor";
   // const welcomeName = user?.firstName || user?.username || "there";
   const departmentName = formatDepartment(user?.department || "Sciences");
+<<<<<<< HEAD
   const status = user.status;
+=======
+
+>>>>>>> ee7bc6c2a19f432118cdeb4ed7f6876d5a04bad9
   const sortedSchedules = useMemo(
     () => [...schedules].sort((a, b) => {
       const dayOrderDiff = getDayOrder(a?.day) - getDayOrder(b?.day);
@@ -94,6 +113,7 @@ const ProfessorPage = () => {
     }),
     [schedules],
   );
+
   const typeTotals = useMemo(
     () => schedules.reduce(
       (totals, item) => {
@@ -107,18 +127,20 @@ const ProfessorPage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#eef1f8] p-8 font-sans">
-      <div className="max-w-6xl mx-auto space-y-8">
-        <div className="bg-white rounded-2xl p-6 shadow-sm flex flex-col md:flex-row justify-between items-center border border-gray-50">
+    <div className="min-h-screen p-6 md:p-8 font-sans">
+      <div className="max-w-7xl mx-auto space-y-10">
+        <div className="bg-white rounded-[25px] p-6 shadow-md flex flex-col md:flex-row justify-between items-center border border-gray-50">
           <div className="flex items-center gap-6">
-
+            <div className="w-14 h-14 flex items-center justify-center font-black text-blue-600 bg-gray-100 rounded-full text-xl">
+              {welcomeName.charAt(0)}
+            </div>
             <div>
-              <h1 className="text-3xl font-bold text-[#14234b]">{displayName}</h1>
+              <h1 className="text-3xl font-bold text-gray-800">{displayName}</h1>
               <div className="flex items-center gap-2 text-gray-500 mt-1 mb-2 text-sm">
                 <Building2 size={16} />
                 <span>Department of {departmentName}</span>
               </div>
-              <span className="bg-[#e4ebfa] text-[#4a6bdf] px-3 py-1 rounded-full text-xs font-semibold">
+              <span className="bg-gray-100 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold">
                 Tenured Professor
               </span>
             </div>
@@ -145,8 +167,14 @@ const ProfessorPage = () => {
 
         <div className="flex flex-col md:flex-row justify-between items-end gap-4">
           <div>
+<<<<<<< HEAD
             <h2 className="text-4xl font-bold text-[#14234b] mb-2 font-serif tracking-tight">
               Welcome Back, {user.firstName}!
+=======
+            <p className="font-bold opacity-60 uppercase text-sm">Faculty Dashboard</p>
+            <h2 className="text-5xl font-black mt-2 text-gray-800">
+              Welcome Back, {welcomeName}!
+>>>>>>> ee7bc6c2a19f432118cdeb4ed7f6876d5a04bad9
             </h2>
             <p className="text-gray-600 text-sm">
               It's a bright day at the Xavier Main Campus. Here is your overview for today.
@@ -155,7 +183,7 @@ const ProfessorPage = () => {
 
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 bg-white hover:bg-red-50 text-[#14234b] hover:text-red-600 px-5 py-2.5 rounded-xl shadow-sm border border-gray-100 transition-all font-semibold text-sm"
+            className="flex items-center gap-2 bg-white hover:bg-red-50 text-gray-800 hover:text-red-600 px-5 py-2.5 rounded-lg shadow-md border border-gray-100 transition-all font-semibold text-sm"
           >
             <LogOut size={18} />
             Log Out
@@ -163,9 +191,9 @@ const ProfessorPage = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-          <div className="lg:col-span-2 bg-white rounded-2xl p-8 shadow-sm border border-gray-50">
+          <div className="lg:col-span-2 bg-white rounded-[35px] p-8 shadow-2xl border border-gray-50">
             <div className="flex justify-between items-center mb-8">
-              <h3 className="text-2xl font-bold text-[#14234b]">My Schedule</h3>
+              <h3 className="text-2xl font-black text-gray-800">My Schedule</h3>
               <div className="flex items-center gap-2 text-gray-500 font-medium text-sm">
                 <Calendar size={18} />
                 {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
@@ -191,10 +219,10 @@ const ProfessorPage = () => {
                     <button
                       type="button"
                       onClick={() => setSelectedSchedule(item)}
-                      className="flex-1 rounded-xl p-5 flex flex-col md:flex-row justify-between items-start md:items-center border border-gray-100 bg-white transition-all text-left hover:border-[#14234b]/30 hover:shadow-sm"
+                      className="flex-1 rounded-xl p-5 flex flex-col md:flex-row justify-between items-start md:items-center border border-gray-100 bg-white transition-all text-left hover:border-blue-500 hover:shadow-md"
                     >
                       <div>
-                        <h4 className="text-lg font-bold text-[#14234b] mb-2">{item.subject}</h4>
+                        <h4 className="text-lg font-bold text-gray-800 mb-2">{item.subject}</h4>
                         <div className="flex gap-5 text-gray-500 text-sm font-medium">
                           <span className="flex items-center gap-1.5">
                             <MapPin size={16} className="text-gray-400" />
@@ -217,7 +245,7 @@ const ProfessorPage = () => {
             </div>
 
             {schedules.length > 3 && (
-              <button className="w-full mt-6 pt-6 flex items-center justify-center gap-1 text-[#14234b] font-bold text-sm hover:text-blue-700 transition-colors">
+              <button className="w-full mt-6 pt-6 flex items-center justify-center gap-1 text-blue-600 font-bold text-sm hover:text-blue-700 transition-colors">
                 Expand Full Schedule
                 <ChevronDown size={18} />
               </button>
@@ -227,25 +255,25 @@ const ProfessorPage = () => {
           <div className="flex flex-col gap-6">
             <button
               onClick={() => setShowModal(true)}
-              className="w-full bg-white rounded-2xl p-5 shadow-sm border border-gray-50 flex items-center justify-center gap-3 text-[#14234b] font-bold text-lg hover:shadow-md transition-shadow"
+              className="w-full bg-white rounded-[25px] p-5 shadow-md border border-gray-50 flex items-center justify-center gap-3 text-gray-800 hover:text-blue-600 font-bold text-lg hover:shadow-lg transition-all"
             >
-              <Calendar size={22} className="text-[#14234b]" />
+              <Calendar size={22} className="text-blue-600" />
               Add Schedule
             </button>
 
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-50 flex relative">
+            <div className="bg-white rounded-[25px] shadow-md border border-gray-50 flex relative">
               <div className="flex-1 p-6 text-center border-r border-gray-100">
                 <p className="text-[10px] font-bold text-gray-400 tracking-wider mb-2">LABS</p>
-                <p className="text-4xl font-bold text-[#14234b]">{String(typeTotals.lab).padStart(2, "0")}</p>
+                <p className="text-4xl font-black text-gray-800">{String(typeTotals.lab).padStart(2, "0")}</p>
               </div>
               <div className="flex-1 p-6 text-center">
                 <p className="text-[10px] font-bold text-gray-400 tracking-wider mb-2">LECTURE</p>
-                <p className="text-4xl font-bold text-[#14234b]">{String(typeTotals.lecture).padStart(2, "0")}</p>
+                <p className="text-4xl font-black text-gray-800">{String(typeTotals.lecture).padStart(2, "0")}</p>
               </div>
 
               <button
                 onClick={() => setShowModal(true)}
-                className="absolute -bottom-4 -right-4 bg-[#fdbd21] hover:bg-[#eeb11d] text-white p-4 rounded-2xl shadow-lg transition-transform hover:scale-105 border-4 border-[#eef1f8]"
+                className="absolute -bottom-4 -right-4 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-2xl shadow-lg transition-transform hover:scale-105 border-4 border-white"
               >
                 <Plus size={28} />
               </button>

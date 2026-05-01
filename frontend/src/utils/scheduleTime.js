@@ -81,3 +81,9 @@ export const formatScheduleTimeRange = (value = "") => {
 
   return String(value || "");
 };
+
+export const normalizeScheduleType = (type = "") =>
+  String(type).trim().toLowerCase() === "lab" ? "lab" : "lecture";
+
+export const formatScheduleType = (type = "") =>
+  normalizeScheduleType(type) === "lab" ? "Lab" : "Lecture";
