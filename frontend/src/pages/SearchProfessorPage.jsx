@@ -132,10 +132,12 @@ const SearchProfessorPage = () => {
           <div className="flex flex-col items-end mt-4 md:mt-0">
             <div className="bg-gray-100/80 rounded-full p-1.5 flex items-center gap-3">
               <span className="text-xs font-bold text-gray-400 tracking-wider pl-3">STATUS</span>
-              <div className="bg-[#e2f5ea] text-[#1f9254] px-3 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2 shadow-sm">
-                <div className="w-2 h-2 rounded-full bg-[#1f9254]"></div>
-                On Campus
-              </div>
+              {professor && (
+                <div className={`${getStatusConfig(professor.status).bg} ${getStatusConfig(professor.status).text} px-3 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2 shadow-sm`}>
+                  <div className={`w-2 h-2 rounded-full ${getStatusConfig(professor.status).dot}`}></div>
+                  {getStatusConfig(professor.status).label}
+                </div>
+              )}
             </div>
           </div>
         </div>
