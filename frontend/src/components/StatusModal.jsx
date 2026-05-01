@@ -12,12 +12,14 @@ const StatusModal = ({ onClose, onSuccess, currentStatus }) => {
     setLoading(true);
     try {
       const user = getUser();
-      if (!user || !user.id) {
-        console.error("User not found");
+      const userId = user?.id || user?._id;
+      
+      if (!user || !userId) {
+        console.error("User not found or missing ID", user);
         return;
       }
 
-      const response = await api.patch(`/users/updateUser/${user.id}`, {
+      const response = await api.patch(`/users/updateUser/${userId}`, {
         status: status
       });
 

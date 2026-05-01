@@ -64,11 +64,10 @@ const ProfessorPage = () => {
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState(null);
 
-<<<<<<< HEAD
   const refreshUser = () => {
     setUser(getUser());
   };
-=======
+
   // If user is ADMIN and not normal faculty, go back to login. (para for extra safety ra ni)
   useEffect(() => {
  
@@ -76,16 +75,12 @@ const ProfessorPage = () => {
       navigate("/login", { replace: true }); 
     }
   }, [user, navigate]);
->>>>>>> ee7bc6c2a19f432118cdeb4ed7f6876d5a04bad9
 
   const handleLogout = async () => {
     try {
       await api.post("/users/logout", { username: user?.username });
     } catch {
-<<<<<<< HEAD
-=======
    
->>>>>>> ee7bc6c2a19f432118cdeb4ed7f6876d5a04bad9
     } finally {
       clearToken();
       clearUser();
@@ -94,13 +89,9 @@ const ProfessorPage = () => {
   };
 
   const displayName = user ? `${user.firstName} ${user.lastName}` : "Professor";
-  // const welcomeName = user?.firstName || user?.username || "there";
+  const welcomeName = user?.firstName || user?.username || "there";
   const departmentName = formatDepartment(user?.department || "Sciences");
-<<<<<<< HEAD
   const status = user.status;
-=======
-
->>>>>>> ee7bc6c2a19f432118cdeb4ed7f6876d5a04bad9
   const sortedSchedules = useMemo(
     () => [...schedules].sort((a, b) => {
       const dayOrderDiff = getDayOrder(a?.day) - getDayOrder(b?.day);
@@ -167,14 +158,9 @@ const ProfessorPage = () => {
 
         <div className="flex flex-col md:flex-row justify-between items-end gap-4">
           <div>
-<<<<<<< HEAD
-            <h2 className="text-4xl font-bold text-[#14234b] mb-2 font-serif tracking-tight">
-              Welcome Back, {user.firstName}!
-=======
             <p className="font-bold opacity-60 uppercase text-sm">Faculty Dashboard</p>
             <h2 className="text-5xl font-black mt-2 text-gray-800">
               Welcome Back, {welcomeName}!
->>>>>>> ee7bc6c2a19f432118cdeb4ed7f6876d5a04bad9
             </h2>
             <p className="text-gray-600 text-sm">
               It's a bright day at the Xavier Main Campus. Here is your overview for today.
