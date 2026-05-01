@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Building2, Calendar, MapPin, Clock, ArrowLeft } from "lucide-react";
 import api from "../api/axios";
 import { formatScheduleTimeRange, parseScheduleTimeRange } from "../utils/scheduleTime";
+import { getStatusConfig } from "../constants/statuses";
 
 const formatDepartment = (department = "") =>
   String(department)
@@ -136,7 +137,6 @@ const SearchProfessorPage = () => {
                 On Campus
               </div>
             </div>
-            <span className="text-[11px] text-gray-400 italic mt-2 pr-2">Last sync: 2 minutes ago</span>
           </div>
         </div>
 

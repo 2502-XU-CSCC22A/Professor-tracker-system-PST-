@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import { clearToken, clearUser, getUser } from "../utils/auth";
 import useSchedules from "../hooks/useSchedules";
+import { getStatusConfig } from "../constants/statuses";
 import {
   Building2,
   Calendar,
@@ -14,6 +15,7 @@ import {
 } from "lucide-react";
 import ScheduleModal from "../components/ScheduleModal";
 import ScheduleEditModal from "../components/ScheduleEditModal";
+import StatusModal from "../components/StatusModal";
 import { formatScheduleTimeRange, parseScheduleTimeRange } from "../utils/scheduleTime";
 
 
@@ -49,13 +51,24 @@ const getScheduleStartMinutes = (time = "") => {
   return (hour * 60) + minute;
 };
 
+const getStatusDisplay = (status) => {
+  const statusConfig = getStatusConfig(status);
+  return statusConfig.label;
+};
+
 const ProfessorPage = () => {
   const navigate = useNavigate();
-  const user = getUser();
+  const [user, setUser] = useState(getUser());
   const { schedules, loading, refresh } = useSchedules();
   const [showModal, setShowModal] = useState(false);
+  const [showStatusModal, setShowStatusModal] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState(null);
 
+<<<<<<< HEAD
+  const refreshUser = () => {
+    setUser(getUser());
+  };
+=======
   // If user is ADMIN and not normal faculty, go back to login. (para for extra safety ra ni)
   useEffect(() => {
  
@@ -63,12 +76,16 @@ const ProfessorPage = () => {
       navigate("/login", { replace: true }); 
     }
   }, [user, navigate]);
+>>>>>>> ee7bc6c2a19f432118cdeb4ed7f6876d5a04bad9
 
   const handleLogout = async () => {
     try {
       await api.post("/users/logout", { username: user?.username });
     } catch {
+<<<<<<< HEAD
+=======
    
+>>>>>>> ee7bc6c2a19f432118cdeb4ed7f6876d5a04bad9
     } finally {
       clearToken();
       clearUser();
@@ -77,9 +94,13 @@ const ProfessorPage = () => {
   };
 
   const displayName = user ? `${user.firstName} ${user.lastName}` : "Professor";
-  const welcomeName = user?.firstName || user?.username || "there";
+  // const welcomeName = user?.firstName || user?.username || "there";
   const departmentName = formatDepartment(user?.department || "Sciences");
+<<<<<<< HEAD
+  const status = user.status;
+=======
 
+>>>>>>> ee7bc6c2a19f432118cdeb4ed7f6876d5a04bad9
   const sortedSchedules = useMemo(
     () => [...schedules].sort((a, b) => {
       const dayOrderDiff = getDayOrder(a?.day) - getDayOrder(b?.day);
@@ -126,22 +147,34 @@ const ProfessorPage = () => {
           </div>
 
           <div className="flex flex-col items-end mt-4 md:mt-0">
-            <div className="bg-gray-100/80 rounded-full p-1.5 flex items-center gap-3">
+            <button
+              className="bg-gray-100/80 rounded-full p-1.5 flex items-center gap-3 hover:bg-gray-200/80 transition-colors" onClick={() => setShowStatusModal(true)}
+            >
               <span className="text-xs font-bold text-gray-400 tracking-wider pl-3">STATUS</span>
-              <div className="bg-[#e2f5ea] text-[#1f9254] px-3 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2 shadow-sm">
-                <div className="w-2 h-2 rounded-full bg-[#1f9254]"></div>
-                On Campus
-              </div>
-            </div>
-            <span className="text-[11px] text-gray-400 italic mt-2 pr-2">Last sync: 2 minutes ago</span>
+              {(() => {
+                const statusConfig = getStatusConfig(status);
+                return (
+                  <div className={`${statusConfig.bg} ${statusConfig.text} px-3 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2 shadow-sm`}>
+                    <div className={`w-2 h-2 rounded-full ${statusConfig.dot}`}></div>
+                    {getStatusDisplay(status)}
+                  </div>
+                );
+              })()}
+            </button>
+            {/* <span className="text-[11px] text-gray-400 italic mt-2 pr-2">Last sync: 2 minutes ago</span> */}
           </div>
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-end gap-4">
           <div>
+<<<<<<< HEAD
+            <h2 className="text-4xl font-bold text-[#14234b] mb-2 font-serif tracking-tight">
+              Welcome Back, {user.firstName}!
+=======
             <p className="font-bold opacity-60 uppercase text-sm">Faculty Dashboard</p>
             <h2 className="text-5xl font-black mt-2 text-gray-800">
               Welcome Back, {welcomeName}!
+>>>>>>> ee7bc6c2a19f432118cdeb4ed7f6876d5a04bad9
             </h2>
             <p className="text-gray-600 text-sm">
               It's a bright day at the Xavier Main Campus. Here is your overview for today.
@@ -263,6 +296,18 @@ const ProfessorPage = () => {
           onSuccess={refresh}
         />
       )}
+
+      {showStatusModal && (
+        <StatusModal
+          currentStatus={user.status}
+          onClose={() => setShowStatusModal(false)}
+          onSuccess={() => {
+            refreshUser();
+            refresh();
+          }}
+        />
+      )}
+
     </div>
   );
 };

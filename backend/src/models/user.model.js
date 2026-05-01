@@ -8,7 +8,8 @@ const userSchema = new Schema(
         email: { type: String, required: true, unique: true, lowercase: true, trim: true },
         firstName: { type: String, required: true, trim: true },
         lastName: { type: String, required: true, trim: true },
-        department: { type: String, required: true, lowercase: true, trim: true }
+        department: { type: String, required: true, lowercase: true, trim: true },
+        status:{type: String,required: true,trim: true}
     },
     { timestamps: true }
 );

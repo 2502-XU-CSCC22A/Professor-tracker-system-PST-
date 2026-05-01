@@ -35,6 +35,7 @@ const registerUser = async (req, res) => {
       department,
       firstName,
       lastName,
+      status: "ON"
     });
 
     await user.save();
@@ -47,7 +48,8 @@ const registerUser = async (req, res) => {
         username: user.username,
         firstName: user.firstName,
         lastName: user.lastName,
-        department: user.department
+        department: user.department,
+        status: user.status
       }
     });
 
@@ -131,6 +133,7 @@ const loginUser = async (req, res) => {
         firstName: user.firstName,
         lastName: user.lastName,
         department: user.department,
+        status: user.status
       }
     });
   } catch (error) {
