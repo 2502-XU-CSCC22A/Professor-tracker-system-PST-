@@ -217,11 +217,26 @@ const deleteUser = async (req, res) => {
         });
     }
 }
+
+const getProfessorsByDepartment = async (req, res) => {
+  try {
+    const { department } = req.params;
+
+    const professors = await User.find({
+      department: department.toLowerCase(),
+    }).select("firstName lastName username department");
+
+    res.status(200).json(professors);
+  } catch (error) {
+    res.status(500).json({ message: "SERVER ERROR" });
+  }
+};
 export{
     registerUser,
     loginUser,
     logoutUser,
     getUsers,
     updateUser,
-    deleteUser
+    deleteUser,
+    getProfessorsByDepartment
 };

@@ -99,6 +99,8 @@ const ScheduleModal = ({ onClose, onSuccess }) => {
               name="startTime"
               value={form.startTime}
               onChange={handleChange}
+              min={"7:00"}
+              max={"20:00"}
               className="w-full px-4 py-3 bg-gray-100 border border-transparent rounded-xl text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all"
             />
           </div>
@@ -110,6 +112,8 @@ const ScheduleModal = ({ onClose, onSuccess }) => {
               name="endTime"
               value={form.endTime}
               onChange={handleChange}
+              min={"7:00"}
+              max={"20:00"}
               className="w-full px-4 py-3 bg-gray-100 border border-transparent rounded-xl text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all"
             />
           </div>
