@@ -144,13 +144,13 @@ export default function MainPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f4f6f9] font-sans text-gray-800 flex flex-col">
+    <div className="min-h-screen font-sans text-gray-800 flex flex-col">
       <header className="w-full px-6 py-6 md:px-10 flex items-start justify-between">
         <div className="hidden md:block flex-1"></div>
 
         <div className="flex-1 flex justify-center w-full max-w-2xl px-4">
           <div className="w-full flex items-center gap-3">
-            <div className="bg-white rounded-full flex items-center w-full px-4 py-2.5 shadow-sm border border-gray-200">
+            <div className=" bg-white rounded-full flex items-center w-full px-4 py-2.5 shadow-sm border border-gray-200">
               <SearchIcon className="w-5 h-5 text-gray-400 ml-2" />
 
               <input
@@ -182,7 +182,8 @@ export default function MainPage() {
 
           <button
             onClick={() => navigate("/login")}
-            className="bg-[#e4e9f0] hover:bg-[#d1d8e4] text-[#2c3b5e] border border-[#cbd5e1] font-semibold text-sm px-5 py-1.5 rounded-md shadow-sm"
+            className="bg-white hover:bg-[#d1d8e4] text-[#2c3b5e] border border-[#cbd5e1] font-semibold text-sm px-5 py-1.5 rounded-md shadow-sm"
+            
           >
             Login
           </button>
@@ -191,17 +192,23 @@ export default function MainPage() {
 
       <main className="flex-1 w-full max-w-[1400px] mx-auto px-4 md:px-10 pb-12 flex flex-col">
         <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6 mt-4">
-          <h1 className="text-2xl md:text-3xl font-black text-[#1a2542] uppercase tracking-tight">
+          <h1 className="text-2xl md:text-3xl font-bold text-white uppercase tracking-tight">
             THIS WEEK&apos;S SCHEDULES
           </h1>
 
           <select
             value={selectedDepartment}
             onChange={(e) => setSelectedDepartment(e.target.value)}
-            className="appearance-none bg-[#b3c0d6] hover:bg-[#a0b0cb] text-[#1a2542] border border-[#9caecb] px-4 py-1.5 rounded-md font-bold text-sm shadow-sm"
+            className="appearance-none bg-white text-[#1a2542] border border-[#9caecb] px-4 py-1.5 rounded-md font-bold text-sm shadow-sm"
           >
-            <option value="ccs">COMPUTER Studies</option>
-            <option value="aggies">AGGIES DEPT.</option>
+              <option value="ccs">College of Computer Studies</option>
+              <option value="engineering">College of Engineering</option>
+              <option value="arts_sciences">College of Arts & Sciences</option>
+              <option value="medicine">School of Medicine</option>
+              <option value="nursing">College of Nursing</option>
+              <option value="agriculture">College of Agriculture</option>
+              <option value="education">College of Education</option>
+              <option value="law">School of Law</option>
           </select>
 
           <select
@@ -221,9 +228,9 @@ export default function MainPage() {
           </select>
         </div>
 
-        <div className="bg-white rounded-xl shadow-md border border-gray-300 overflow-x-auto flex-1">
+        <div className="rounded-xl shadow-md border border-gray-300 overflow-x-auto flex-1">
           <div className="min-w-[1000px]">
-            <div className="grid grid-cols-[100px_repeat(7,1fr)] bg-white border-b-2 border-gray-200">
+            <div className="grid grid-cols-[100px_repeat(7,1fr)]  border-b-2 border-gray-200">
               <div className="p-4 flex items-center justify-center text-sm font-bold text-gray-800 border-r border-gray-200 uppercase">
                 TIME
               </div>
@@ -245,7 +252,7 @@ export default function MainPage() {
                   className="grid grid-cols-[100px_repeat(7,1fr)] border-b border-gray-200 last:border-b-0"
                   style={{ minHeight: `${ROW_HEIGHT}px` }}
                 >
-                  <div className="p-3 flex items-center justify-center text-[13px] font-bold text-gray-600 border-r border-gray-200 bg-white">
+                  <div className="p-3 flex items-center justify-center text-[13px] font-bold text-gray-600 border-r border-gray-200 ">
                     {time}
                   </div>
 
