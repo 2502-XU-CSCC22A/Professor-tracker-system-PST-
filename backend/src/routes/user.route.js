@@ -5,7 +5,8 @@ import {
     registerUser, 
     getUsers, 
     updateUser, 
-    deleteUser 
+    deleteUser ,
+    getProfessorsByDepartment
 } from '../controllers/user.controller.js';
 import { protect } from "../middleware/auth.js";
 
@@ -15,6 +16,7 @@ const router = Router();
 router.route('/register').post(registerUser);
 router.route('/login').post(loginUser);
 router.route('/logout').post(logoutUser);
+router.get("/department/:department", getProfessorsByDepartment);
 
 // Protected routes 
 router.route('/getusers').get(protect, getUsers);
