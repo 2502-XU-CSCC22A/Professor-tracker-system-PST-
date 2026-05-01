@@ -167,7 +167,7 @@ const searchProfessorSchedules = async (req, res) => {
         const user = await User.findOne({
             firstName: { $regex: `^${escapeRegExp(firstName)}$`, $options: "i" },
             lastName: { $regex: `^${escapeRegExp(lastName)}$`, $options: "i" },
-        }).select("firstName lastName username department");
+        }).select("firstName lastName username department status");
 
         if (!user) {
             return res.status(404).json({
@@ -185,6 +185,7 @@ const searchProfessorSchedules = async (req, res) => {
                 lastName: user.lastName,
                 username: user.username,
                 department: user.department,
+                status: user.status,
             },
             schedules,
         });

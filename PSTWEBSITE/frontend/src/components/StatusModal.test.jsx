@@ -108,4 +108,38 @@ describe('StatusModal - Status Change Tests', () => {
     expect(title).toBeInTheDocument();
     expect(title.tagName).toBe('H3');
   });
+
+  // Test if status is changed to In Class in the back end when user clicks the button
+  test('should call onSuccess with "CLASS" when In Class button is clicked', () => {
+    render(<StatusModal onClose={mockOnClose} onSuccess={mockOnSuccess} />);
+    
+    const inClassButton = screen.getByText('In Class').closest('button');
+    fireEvent.click(inClassButton);
+    
+    // Verify onSuccess was called with the status value "CLASS"
+    expect(mockOnSuccess).toHaveBeenCalledWith('CLASS');
+    expect(mockOnSuccess).toHaveBeenCalledTimes(1);
+  });
+
+  // Test if onSuccess is called with correct status values for all options
+  test('should call onSuccess with correct status value for each button clicked', () => {
+    render(<StatusModal onClose={mockOnClose} onSuccess={mockOnSuccess} />);
+    
+    // Test On Campus
+    const onCampusButton = screen.getByText('On Campus').closest('button');
+    fireEvent.click(onCampusButton);
+    expect(mockOnSuccess).toHaveBeenCalledWith('ON');
+    
+    // Clear and test Off Campus
+    jest.clearAllMocks();
+    const offCampusButton = screen.getByText('Off Campus').closest('button');
+    fireEvent.click(offCampusButton);
+    expect(mockOnSuccess).toHaveBeenCalledWith('OFF');
+    
+    // Clear and test In Class
+    jest.clearAllMocks();
+    const inClassButton = screen.getByText('In Class').closest('button');
+    fireEvent.click(inClassButton);
+    expect(mockOnSuccess).toHaveBeenCalledWith('CLASS');
+  });
 });

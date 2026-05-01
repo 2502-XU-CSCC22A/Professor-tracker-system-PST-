@@ -1,15 +1,38 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import api from "../api/axios";
-import { getUser } from "../utils/auth";
-const STATUSES = [
-  { value: "ON", label: "On Campus", bg: "bg-[#e2f5ea]", text: "text-[#1f9254]", dot: "bg-[#1f9254]" },
-  { value: "OFF", label: "Off Campus", bg: "bg-[#fef3c7]", text: "text-[#d97706]", dot: "bg-[#d97706]" },
-  { value: "CLASS", label: "In Class", bg: "bg-[#e0e7ff]", text: "text-[#4f46e5]", dot: "bg-[#4f46e5]" },
-];
+import { getUser, saveUser } from "../utils/auth";
+import { STATUSES } from "../constants/statuses";
 
-const StatusModal = ({ onClose, onSuccess }) => {
-  const [selectedStatus, setSelectedStatus] = useState(null);
+const StatusModal = ({ onClose, onSuccess, currentStatus }) => {
+  const [selectedStatus, setSelectedStatus] = useState(currentStatus || null);
+  const [loading, setLoading] = useState(false);
+
+  const handleStatusUpdate = async (status) => {
+    setLoading(true);
+    try {
+      const user = getUser();
+      if (!user || !user.id) {
+        console.error("User not found");
+        return;
+      }
+
+      const response = await api.patch(`/users/updateUser/${user.id}`, {
+        status: status
+      });
+
+      if (response.status === 200) {
+        const updatedUser = { ...user, status: status };
+        saveUser(updatedUser);
+        onSuccess();
+        // onClose();
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
@@ -24,7 +47,11 @@ const StatusModal = ({ onClose, onSuccess }) => {
           {STATUSES.map((status) => (
             <button
               key={status.value}
-              onClick={() => setSelectedStatus(status.value)}
+              onClick={() => {
+                setSelectedStatus(status.value);
+                handleStatusUpdate(status.value);
+              }}
+              disabled={status.value === "ON" && loading}
               className={`w-full p-4 rounded-xl border-2 font-semibold transition-all flex items-center gap-3 ${
                 selectedStatus === status.value? `${status.bg} ${status.text} border-current`: "bg-gray-50 text-gray-600 border-gray-200 hover:border-gray-300"}`}
             >

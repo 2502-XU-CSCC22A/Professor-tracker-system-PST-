@@ -1,8 +1,9 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import { clearToken, clearUser, getUser } from "../utils/auth";
 import useSchedules from "../hooks/useSchedules";
+import { getStatusConfig } from "../constants/statuses";
 import {
   Building2,
   Calendar,
@@ -50,21 +51,21 @@ const getScheduleStartMinutes = (time = "") => {
 };
 
 const getStatusDisplay = (status) => {
-  const statusMap = {
-    ON: "On Campus",
-    OFF: "Off Campus",
-    CLASS: "In Class"
-  };
-  return statusMap[status];
+  const statusConfig = getStatusConfig(status);
+  return statusConfig.label;
 };
 
 const ProfessorPage = () => {
   const navigate = useNavigate();
-  const user = getUser();
+  const [user, setUser] = useState(getUser());
   const { schedules, loading, refresh } = useSchedules();
   const [showModal, setShowModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState(null);
+
+  const refreshUser = () => {
+    setUser(getUser());
+  };
 
   const handleLogout = async () => {
     try {
@@ -128,12 +129,17 @@ const ProfessorPage = () => {
               className="bg-gray-100/80 rounded-full p-1.5 flex items-center gap-3 hover:bg-gray-200/80 transition-colors" onClick={() => setShowStatusModal(true)}
             >
               <span className="text-xs font-bold text-gray-400 tracking-wider pl-3">STATUS</span>
-              <div className="bg-[#e2f5ea] text-[#1f9254] px-3 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2 shadow-sm">
-                <div className="w-2 h-2 rounded-full bg-[#1f9254]"></div>
-                {getStatusDisplay(status)}
-              </div>
+              {(() => {
+                const statusConfig = getStatusConfig(status);
+                return (
+                  <div className={`${statusConfig.bg} ${statusConfig.text} px-3 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2 shadow-sm`}>
+                    <div className={`w-2 h-2 rounded-full ${statusConfig.dot}`}></div>
+                    {getStatusDisplay(status)}
+                  </div>
+                );
+              })()}
             </button>
-            <span className="text-[11px] text-gray-400 italic mt-2 pr-2">Last sync: 2 minutes ago</span>
+            {/* <span className="text-[11px] text-gray-400 italic mt-2 pr-2">Last sync: 2 minutes ago</span> */}
           </div>
         </div>
 
@@ -265,8 +271,12 @@ const ProfessorPage = () => {
 
       {showStatusModal && (
         <StatusModal
+          currentStatus={user.status}
           onClose={() => setShowStatusModal(false)}
-          onSuccess={refresh}
+          onSuccess={() => {
+            refreshUser();
+            refresh();
+          }}
         />
       )}
 
