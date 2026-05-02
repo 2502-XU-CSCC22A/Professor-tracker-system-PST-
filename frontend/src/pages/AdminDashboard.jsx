@@ -6,7 +6,7 @@ import EditFacultyModal from "../components/EditFacultyModal";
 import Toast from "../components/Toast";
 import api, { deleteProfessor } from "../api/axios";
 import { clearToken, clearUser, getUser } from "../utils/auth";
-import { Bell, Trash2, Pencil, LogOut, Search, Filter } from 'lucide-react';
+import { Trash2, Pencil, LogOut, Search, Filter } from 'lucide-react';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -102,9 +102,6 @@ const AdminDashboard = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <button className="p-3 text-gray-400 hover:text-blue-600">
-              <Bell size={24} />
-            </button>
             <button onClick={handleLogout} className="p-3 text-gray-400 hover:text-red-600">
               <LogOut size={24} />
             </button>
