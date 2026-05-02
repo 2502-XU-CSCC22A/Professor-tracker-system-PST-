@@ -96,8 +96,8 @@ const AdminDashboard = () => {
               {welcomeName.charAt(0)}
             </div>
             <div>
-              <span className="text-[10px] font-bold text-gray-400 uppercase">System Role</span>
-              <h1 className="text-xl font-bold text-gray-800">Admin Panel</h1>
+              <span className="text-[10px] font-bold text-gray-400 uppercase">Admin</span>
+              <h1 className="text-xl font-bold text-gray-800">{welcomeName}</h1>
             </div>
           </div>
 
