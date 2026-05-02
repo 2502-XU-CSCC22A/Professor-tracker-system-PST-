@@ -29,6 +29,7 @@ const createSchedule = async (req, res) => {
     try {
         const { subject, room, time, day, type } = req.body;
         const normalizedType = normalizeScheduleType(type);
+        const normalizedDay = normalizeScheduleType(day);
 
         if (!subject || !room || !time || !day || !normalizedType){
             return res.status(400).json({
