@@ -37,6 +37,7 @@ const StatusModal = ({ onClose, onSuccess, currentStatus }) => {
   };
 
   return (
+    
     <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 w-full max-w-md">
         <div className="flex justify-between items-center mb-6">
