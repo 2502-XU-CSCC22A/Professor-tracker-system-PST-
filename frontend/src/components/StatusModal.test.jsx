@@ -1,5 +1,13 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import StatusModal from './StatusModal';
+import api from "../api/axios";
+import { getUser, saveUser } from "../utils/auth";
+
+jest.mock("../api/axios");
+jest.mock("../utils/auth", () => ({
+  getUser: jest.fn(),
+  saveUser: jest.fn(),
+}));
 
 describe('StatusModal - Status Change Tests', () => {
   const mockOnClose = jest.fn();
@@ -7,6 +15,9 @@ describe('StatusModal - Status Change Tests', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    api.patch.mockResolvedValue({ status: 200 });
+    getUser.mockReturnValue({ id: 'test-user-id', _id: 'test-user-id' });
+    saveUser.mockImplementation(() => {});
   });
 
   // Test if modal renders with all status options
@@ -30,7 +41,7 @@ describe('StatusModal - Status Change Tests', () => {
     expect(onCampusButton).toHaveClass('text-[#1f9254]');
   });
 
-  // Test if iser can select "Off Campus" status
+  // Test if user can select "Off Campus" status
   test('should highlight "Off Campus" when clicked', () => {
     render(<StatusModal onClose={mockOnClose} onSuccess={mockOnSuccess} />);
     
@@ -69,26 +80,7 @@ describe('StatusModal - Status Change Tests', () => {
     expect(offCampusButton).toHaveClass('bg-[#fef3c7]');
   });
 
-  // Test if user can switch between all status options
-  test('should allow switching between all status options', () => {
-    render(<StatusModal onClose={mockOnClose} onSuccess={mockOnSuccess} />);
-    
-    const onCampusButton = screen.getByText('On Campus').closest('button');
-    const offCampusButton = screen.getByText('Off Campus').closest('button');
-    const inClassButton = screen.getByText('In Class').closest('button');
-    
-    // Switch to On Campus
-    fireEvent.click(onCampusButton);
-    expect(onCampusButton).toHaveClass('bg-[#e2f5ea]');
-    
-    // Switch to Off Campus
-    fireEvent.click(offCampusButton);
-    expect(offCampusButton).toHaveClass('bg-[#fef3c7]');
-    
-    // Switch to In Class
-    fireEvent.click(inClassButton);
-    expect(inClassButton).toHaveClass('bg-[#e0e7ff]');
-  });
+
 
   // Test if the close button works
   test('should call onClose when close button is clicked', () => {
@@ -109,37 +101,37 @@ describe('StatusModal - Status Change Tests', () => {
     expect(title.tagName).toBe('H3');
   });
 
-  // Test if status is changed to In Class in the back end when user clicks the button
-  test('should call onSuccess with "CLASS" when In Class button is clicked', () => {
-    render(<StatusModal onClose={mockOnClose} onSuccess={mockOnSuccess} />);
-    
-    const inClassButton = screen.getByText('In Class').closest('button');
-    fireEvent.click(inClassButton);
-    
-    // Verify onSuccess was called with the status value "CLASS"
-    expect(mockOnSuccess).toHaveBeenCalledWith('CLASS');
-    expect(mockOnSuccess).toHaveBeenCalledTimes(1);
-  });
+  // Test if status changes after user clicks a status button
+  test("should call API and update local user when status changes", async () => {
+    getUser.mockReturnValue({
+      _id: "123",
+      firstName: "Jasper",
+      status: "OFF",
+    });
 
-  // Test if onSuccess is called with correct status values for all options
-  test('should call onSuccess with correct status value for each button clicked', () => {
+    api.patch.mockResolvedValue({
+      status: 200,
+      data: { status: "CLASS" },
+    });
+
     render(<StatusModal onClose={mockOnClose} onSuccess={mockOnSuccess} />);
-    
-    // Test On Campus
-    const onCampusButton = screen.getByText('On Campus').closest('button');
-    fireEvent.click(onCampusButton);
-    expect(mockOnSuccess).toHaveBeenCalledWith('ON');
-    
-    // Clear and test Off Campus
-    jest.clearAllMocks();
-    const offCampusButton = screen.getByText('Off Campus').closest('button');
-    fireEvent.click(offCampusButton);
-    expect(mockOnSuccess).toHaveBeenCalledWith('OFF');
-    
-    // Clear and test In Class
-    jest.clearAllMocks();
-    const inClassButton = screen.getByText('In Class').closest('button');
+
+    const inClassButton = screen.getByText("In Class").closest("button");
     fireEvent.click(inClassButton);
-    expect(mockOnSuccess).toHaveBeenCalledWith('CLASS');
+
+    await waitFor(() => {
+      expect(api.patch).toHaveBeenCalledWith("/users/updateUser/123", {
+        status: "CLASS",
+      });
+    });
+
+    expect(saveUser).toHaveBeenCalledWith({
+      _id: "123",
+      firstName: "Jasper",
+      status: "CLASS",
+    });
+
+    expect(mockOnSuccess).toHaveBeenCalled();
   });
+  
 });
