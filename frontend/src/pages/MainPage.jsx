@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from "axios";
+import api from "../api/axios";
 
 const SearchIcon = ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={className}>
@@ -69,9 +69,7 @@ export default function MainPage() {
   useEffect(() => {
     const fetchProfessors = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:4000/api/v1/users/department/${selectedDepartment}`
-        );
+        const res = await api.get(`/users/department/${selectedDepartment}`);
 
         const formatted = res.data.map((user) => ({
           name: `${user.firstName} ${user.lastName}`,
@@ -99,9 +97,7 @@ export default function MainPage() {
       if (!selectedProfessor) return;
 
       try {
-        const res = await axios.get(
-          `http://localhost:4000/api/v1/schedules/public/search?name=${encodeURIComponent(selectedProfessor)}`
-        );
+        const res = await api.get(`/schedules/public/search?name=${encodeURIComponent(selectedProfessor)}`);
 
         const formatted = res.data.schedules.map((item) => ({
           day: item.day.toUpperCase(),
