@@ -1,7 +1,7 @@
 import axios from "axios";
 
 
-const baseURL = "https://professor-tracker-system-pst-1-mqau.onrender.com/api/v1";
+const baseURL = import.meta.env.VITE_API_URL;
 
 const api = axios.create({
   baseURL,
