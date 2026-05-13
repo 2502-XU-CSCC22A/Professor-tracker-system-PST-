@@ -123,9 +123,9 @@ const SearchProfessorPage = () => {
                 <Building2 size={16} />
                 <span>Department of {departmentName}</span>
               </div>
-              <span className="bg-gray-100 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold">
+              {/* <span className="bg-gray-100 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold">
                 Tenured Professor
-              </span>
+              </span> */}
             </div>
           </div>
 
