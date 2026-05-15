@@ -27,7 +27,6 @@ const StatusModal = ({ onClose, onSuccess, currentStatus }) => {
         const updatedUser = { ...user, status: status };
         saveUser(updatedUser);
         onSuccess();
-        // onClose();
       }
     } catch (error) {
       console.error("Error updating status:", error);
@@ -41,7 +40,7 @@ const StatusModal = ({ onClose, onSuccess, currentStatus }) => {
     <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 w-full max-w-md">
         <div className="flex justify-between items-center mb-6">
-          <h3 className="text-xl font-bold text-[#14234b]">Change Status</h3>
+          <h3 className="text-xl font-bold text-[var(--color-primary)]">Change Status</h3>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
             <X size={22} />
           </button>

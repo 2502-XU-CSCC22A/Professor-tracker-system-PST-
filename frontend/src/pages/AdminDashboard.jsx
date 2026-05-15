@@ -6,7 +6,7 @@ import EditFacultyModal from "../components/EditFacultyModal";
 import Toast from "../components/Toast";
 import api, { deleteProfessor } from "../api/axios";
 import { clearToken, clearUser, getUser } from "../utils/auth";
-import { Trash2, Pencil, LogOut, Search, Filter } from 'lucide-react';
+import { Trash2, Pencil, LogOut, Search, Filter, ChevronDown } from 'lucide-react';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -34,6 +34,18 @@ const AdminDashboard = () => {
     law: "School of Law",
     ADMIN: "ADMIN"
   };
+
+  const departmentColorMap = {
+  ccs: { bg: "bg-blue-100", text: "text-blue-700" },
+  engineering: { bg: "bg-orange-100", text: "text-orange-700" },
+  arts_sciences: { bg: "bg-purple-100", text: "text-purple-700" },
+  medicine: { bg: "bg-red-100", text: "text-red-700" },
+  nursing: { bg: "bg-pink-100", text: "text-pink-700" },
+  agriculture: { bg: "bg-green-100", text: "text-green-700" },
+  education: { bg: "bg-yellow-100", text: "text-yellow-700" },
+  law: { bg: "bg-indigo-100", text: "text-indigo-700" },
+  ADMIN: { bg: "bg-gray-700", text: "text-white" }
+};
 
   const filteredProfessors = professors.filter((prof) => {
     const fullName = `${prof.firstName} ${prof.lastName}`.toLowerCase();
@@ -81,7 +93,7 @@ const AdminDashboard = () => {
     }
   };
 
-  const welcomeName = user?.firstName || "Admin";
+  const welcomeName = `${user?.firstName} ${user?.lastName}` || "Admin";
 
   return (
     <>
@@ -92,12 +104,12 @@ const AdminDashboard = () => {
      
         <header className="bg-white rounded-[25px] p-4 flex justify-between shadow-md">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 flex items-center justify-center font-black text-blue-600 bg-gray-100 rounded-full">
+            <div className="w-12 h-12 flex items-center justify-center font-black text-[var(--color-primary)] bg-gray-100 rounded-full">
               {welcomeName.charAt(0)}
             </div>
             <div>
-              <span className="text-[10px] font-bold text-gray-400 uppercase">Admin</span>
-              <h1 className="text-xl font-bold text-gray-800">{welcomeName}</h1>
+              <h1 className="text-xl font-bold text-[var(--color-primary)]">{welcomeName}</h1>
+              <span className="text-[10px] font-bold text-gray-400">Administrator</span>
             </div>
           </div>
 
@@ -111,23 +123,10 @@ const AdminDashboard = () => {
        
         <div className="flex justify-between items-end">
           <div>
-            <p className="font-bold opacity-60 uppercase text-sm">Faculty Management</p>
-            <h2 className="text-5xl font-black mt-2">
-              Welcome Back,<br /> {welcomeName}
+            <p className="font-bold opacity-80 uppercase text-[var(--color-primary)]">Faculty Management</p>
+            <h2 className="text-5xl font-black text-[var(--color-primary)] mt-2">
+              Welcome, {user?.firstName}
             </h2>
-          </div>
-
-          <div className="text-right">
-            <p className="text-xs font-bold uppercase opacity-70">Total Accounts</p>
-            <h2 className="text-5xl font-black">
-              {loading ? "..." : professors.length}
-            </h2>
-            <button
-              onClick={() => setOpen(true)}
-              className="bg-blue-600 text-white px-6 py-3 rounded-lg mt-3 font-bold"
-            >
-              Add Faculty
-            </button>
           </div>
         </div>
 
@@ -142,17 +141,18 @@ const AdminDashboard = () => {
               placeholder="Search by name or username..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-11 pr-4 py-3 rounded-full bg-gray-100 border border-transparent focus:border-blue-500 focus:bg-white outline-none transition-all"
+              className="w-full pl-11 pr-4 py-3 rounded-full bg-[var(--color-surface)] border border-transparent focus:border-blue-500 focus:bg-white outline-none transition-all"
             />
           </div>
 
       
           <div className="relative">
-            <Filter className="absolute left-3 top-3.5 text-gray-400" size={18} />
+            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+
             <select
               value={deptFilter}
               onChange={(e) => setDeptFilter(e.target.value)}
-              className="pl-10 pr-4 py-3 rounded-full bg-gray-100 border border-transparent focus:border-blue-500 focus:bg-white outline-none font-medium"
+              className="appearance-none pl-10 pr-12 py-3 rounded-full bg-[var(--color-surface)] border border-transparent focus:border-blue-500 focus:bg-white outline-none font-medium"
             >
               <option value="all">All Departments</option>
               <option value="ccs">College of Computer Studies</option>
@@ -165,15 +165,41 @@ const AdminDashboard = () => {
               <option value="law">School of Law</option>
               <option value="ADMIN">ADMIN</option>
             </select>
+
+            <ChevronDown
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+              size={18}
+            />
           </div>
 
         </div>
 
     
         <section className="bg-white rounded-[35px] p-8 shadow-2xl overflow-hidden border border-gray-50">
-          <h3 className="font-black text-2xl mb-6 text-gray-800">
-            Active Faculty Accounts
-          </h3>
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="font-black text-2xl text-[var(--color-primary)]">
+              Active Faculty Accounts
+            </h3>
+
+            <div className="flex items-center gap-4">
+              <div className="text-right">
+                <p className="text-xs font-bold uppercase text-gray-400">
+                  Total Accounts
+                </p>
+                <p className="text-3xl font-black text-[var(--color-primary)]">
+                  {loading ? "..." : professors.length}
+                </p>
+              </div>
+
+              <button
+                onClick={() => setOpen(true)}
+                className="bg-[var(--color-primary)] text-white px-5 py-2.5 rounded-lg font-bold"
+              >
+                Add Faculty
+              </button>
+            </div>
+          </div>
+          
 
           <table className="w-full">
             <thead>
@@ -208,7 +234,7 @@ const AdminDashboard = () => {
                     </td>
 
                     <td className="py-5 text-center">
-                      <span className="px-3 py-1 bg-gray-100 rounded-full text-xs uppercase">
+                      <span className={`px-3 py-1 rounded-full text-xs uppercase font-semibold ${departmentColorMap[prof.department]?.bg || 'bg-gray-100'} ${departmentColorMap[prof.department]?.text || 'text-gray-700'}`}>
                         {departmentMap[prof.department] || prof.department}
                       </span>
                     </td>
