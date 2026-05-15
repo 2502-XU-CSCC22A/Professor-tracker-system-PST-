@@ -35,6 +35,18 @@ const AdminDashboard = () => {
     ADMIN: "ADMIN"
   };
 
+  const departmentColorMap = {
+  ccs: { bg: "bg-blue-100", text: "text-blue-700" },
+  engineering: { bg: "bg-orange-100", text: "text-orange-700" },
+  arts_sciences: { bg: "bg-purple-100", text: "text-purple-700" },
+  medicine: { bg: "bg-red-100", text: "text-red-700" },
+  nursing: { bg: "bg-pink-100", text: "text-pink-700" },
+  agriculture: { bg: "bg-green-100", text: "text-green-700" },
+  education: { bg: "bg-yellow-100", text: "text-yellow-700" },
+  law: { bg: "bg-indigo-100", text: "text-indigo-700" },
+  ADMIN: { bg: "bg-gray-700", text: "text-white" }
+};
+
   const filteredProfessors = professors.filter((prof) => {
     const fullName = `${prof.firstName} ${prof.lastName}`.toLowerCase();
     const username = prof.username?.toLowerCase() || "";
@@ -81,7 +93,7 @@ const AdminDashboard = () => {
     }
   };
 
-  const welcomeName = `${user?.firstName}` || "Admin";
+  const welcomeName = `${user?.firstName} ${user?.lastName}` || "Admin";
 
   return (
     <>
@@ -97,7 +109,7 @@ const AdminDashboard = () => {
             </div>
             <div>
               <h1 className="text-xl font-bold text-[var(--color-primary)]">{welcomeName}</h1>
-              <span className="text-[10px] font-bold text-gray-400 uppercase">Admin</span>
+              <span className="text-[10px] font-bold text-gray-400">Administrator</span>
             </div>
           </div>
 
@@ -113,7 +125,7 @@ const AdminDashboard = () => {
           <div>
             <p className="font-bold opacity-80 uppercase text-[var(--color-primary)]">Faculty Management</p>
             <h2 className="text-5xl font-black text-[var(--color-primary)] mt-2">
-              Welcome, {welcomeName}
+              Welcome, {user?.firstName}
             </h2>
           </div>
         </div>
@@ -222,7 +234,7 @@ const AdminDashboard = () => {
                     </td>
 
                     <td className="py-5 text-center">
-                      <span className="px-3 py-1 bg-gray-100 rounded-full text-xs uppercase">
+                      <span className={`px-3 py-1 rounded-full text-xs uppercase font-semibold ${departmentColorMap[prof.department]?.bg || 'bg-gray-100'} ${departmentColorMap[prof.department]?.text || 'text-gray-700'}`}>
                         {departmentMap[prof.department] || prof.department}
                       </span>
                     </td>

@@ -5,11 +5,23 @@ import api from "../api/axios";
 import { formatScheduleTimeRange, parseScheduleTimeRange } from "../utils/scheduleTime";
 import { getStatusConfig } from "../constants/statuses";
 
-const formatDepartment = (department = "") =>
-  String(department)
-    .trim()
-    .toLowerCase()
+const departmentMap = {
+  ccs: "College of Computer Studies",
+  engineering: "College of Engineering",
+  arts_sciences: "College of Arts & Sciences",
+  medicine: "School of Medicine",
+  nursing: "College of Nursing",
+  agriculture: "College of Agriculture",
+  education: "College of Education",
+  law: "School of Law",
+  ADMIN: "ADMIN"
+};
+
+const formatDepartment = (department = "") => {
+  const deptKey = String(department).trim().toLowerCase();
+  return departmentMap[deptKey] || String(department).trim().toLowerCase()
     .replace(/\b\w/g, (char) => char.toUpperCase());
+};
 
 const normalizeScheduleType = (type = "") => (String(type).trim().toLowerCase() === "lab" ? "lab" : "lecture");
 const formatScheduleType = (type = "") => (normalizeScheduleType(type) === "lab" ? "Lab" : "Lecture");
@@ -118,7 +130,7 @@ const SearchProfessorPage = () => {
               {displayName.charAt(0)}
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-800">{displayName}</h1>
+              <h1 className="text-3xl font-bold text-[var(--color-primary)]">{displayName}</h1>
               <div className="flex items-center gap-2 text-gray-500 mt-1 mb-2 text-sm">
                 <Building2 size={16} />
                 <span>Department of {departmentName}</span>
@@ -155,7 +167,7 @@ const SearchProfessorPage = () => {
 
         <div className="bg-white rounded-[35px] p-8 shadow-2xl border border-gray-50">
           <div className="flex justify-between items-center mb-8">
-            <h3 className="text-2xl font-black text-gray-800">Class Schedule</h3>
+            <h3 className="text-2xl font-black text-[var(--color-primary)]">Class Schedule</h3>
             <div className="flex items-center gap-2 text-gray-500 font-medium text-sm">
               <Calendar size={18} />
               {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
@@ -182,7 +194,7 @@ const SearchProfessorPage = () => {
 
                   <div className="flex-1 rounded-xl p-5 flex flex-col md:flex-row justify-between items-start md:items-center border border-gray-100 bg-white text-left">
                     <div>
-                      <h4 className="text-lg font-bold text-gray-800 mb-2">{item.subject}</h4>
+                      <h4 className="text-lg font-bold text-[var(--color-primary)] mb-2">{item.subject}</h4>
                       <div className="flex gap-5 text-gray-500 text-sm font-medium">
                         <span className="flex items-center gap-1.5">
                           <MapPin size={16} className="text-gray-400" />
@@ -195,7 +207,7 @@ const SearchProfessorPage = () => {
                       </div>
                     </div>
 
-                    <span className="mt-3 md:mt-0 text-[10px] font-bold px-2.5 py-1 rounded tracking-wide bg-gray-100 text-gray-500">
+                    <span className="mt-3 md:mt-0 text-[10px] font-bold px-2.5 py-1 rounded tracking-wide bg-[var(--color-primary)] text-[var(--color-surface)]">
                       SCHEDULED
                     </span>
                   </div>

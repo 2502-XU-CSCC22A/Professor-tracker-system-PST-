@@ -19,11 +19,23 @@ import StatusModal from "../components/StatusModal";
 import { formatScheduleTimeRange, parseScheduleTimeRange } from "../utils/scheduleTime";
 
 
-const formatDepartment = (department = "") =>
-  String(department)
-    .trim()
-    .toLowerCase()
+const departmentMap = {
+  ccs: "College of Computer Studies",
+  engineering: "College of Engineering",
+  arts_sciences: "College of Arts & Sciences",
+  medicine: "School of Medicine",
+  nursing: "College of Nursing",
+  agriculture: "College of Agriculture",
+  education: "College of Education",
+  law: "School of Law",
+  ADMIN: "ADMIN"
+};
+
+const formatDepartment = (department = "") => {
+  const deptKey = String(department).trim().toLowerCase();
+  return departmentMap[deptKey] || String(department).trim().toLowerCase()
     .replace(/\b\w/g, (char) => char.toUpperCase());
+};
 
 const normalizeScheduleType = (type = "") => (String(type).trim().toLowerCase() === "lab" ? "lab" : "lecture");
 const formatScheduleType = (type = "") => (normalizeScheduleType(type) === "lab" ? "Lab" : "Lecture");
@@ -129,7 +141,7 @@ const ProfessorPage = () => {
               <h1 className="text-3xl font-bold text-[var(--color-primary)]">{displayName}</h1>
               <div className="flex items-center gap-2 text-gray-500 mt-1 mb-2 text-sm">
                 <Building2 size={16} />
-                <span>Department of {departmentName}</span>
+                <span>{departmentName}</span>
               </div>
             </div>
           </div>
@@ -228,22 +240,20 @@ const ProfessorPage = () => {
           </div>
 
           <div className="flex flex-col gap-6">
-            <button
-              onClick={() => setShowModal(true)}
-              className="w-full bg-white rounded-[25px] p-5 shadow-md border border-gray-50 flex items-center justify-center gap-3 text-gray-800 hover:text-blue-600 font-bold text-lg hover:shadow-lg transition-all"
-            >
-              <Calendar size={22} className="text-blue-600" />
-              Add Schedule
-            </button>
-
-            <div className="bg-white rounded-[25px] shadow-md border border-gray-50 flex relative">
-              <div className="flex-1 p-6 text-center border-r border-gray-100">
-                <p className="text-[10px] font-bold text-gray-400 tracking-wider mb-2">LABS</p>
-                <p className="text-4xl font-black text-gray-800">{String(typeTotals.lab).padStart(2, "0")}</p>
+            <div className="bg-white rounded-[25px] shadow-md border border-gray-50 flex flex-col relative">
+              <div className="p-6 text-center border-b border-gray-100">
+                <h3 className="text-2xl font-black text-[var(--color-primary)]">Class Summary</h3>
               </div>
-              <div className="flex-1 p-6 text-center">
-                <p className="text-[10px] font-bold text-gray-400 tracking-wider mb-2">LECTURE</p>
-                <p className="text-4xl font-black text-gray-800">{String(typeTotals.lecture).padStart(2, "0")}</p>
+              
+              <div className="flex">
+                <div className="flex-1 p-6 text-center border-r border-gray-100">
+                  <p className="text-[10px] font-bold text-gray-400 tracking-wider mb-2">LABS</p>
+                  <p className="text-4xl font-black text-gray-800">{String(typeTotals.lab).padStart(2, "0")}</p>
+                </div>
+                <div className="flex-1 p-6 text-center">
+                  <p className="text-[10px] font-bold text-gray-400 tracking-wider mb-2">LECTURES</p>
+                  <p className="text-4xl font-black text-gray-800">{String(typeTotals.lecture).padStart(2, "0")}</p>
+                </div>
               </div>
 
               <button
