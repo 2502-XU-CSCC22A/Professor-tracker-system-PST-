@@ -1,6 +1,14 @@
 import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js"
 
+const titleCase = (str) => {
+  return str
+    .toLowerCase()
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
+
 const registerUser = async (req, res) => {
   try {
     const { username, email, password, department, firstName, lastName } = req.body;
@@ -33,8 +41,8 @@ const registerUser = async (req, res) => {
       email: lowerEmail,
       password,
       department,
-      firstName,
-      lastName,
+      firstName: titleCase(firstName),
+      lastName: titleCase(lastName),
       status: "ON"
     });
 
@@ -183,7 +191,15 @@ const  updateUser = async (req, res) => {
             });
         }
         
-        const user = await User.findByIdAndUpdate(req.params.id, req.body,{new: true});
+        const updateData = { ...req.body };
+        if (updateData.firstName) {
+          updateData.firstName = titleCase(updateData.firstName);
+        }
+        if (updateData.lastName) {
+          updateData.lastName = titleCase(updateData.lastName);
+        }
+        
+        const user = await User.findByIdAndUpdate(req.params.id, updateData,{new: true});
           if(!user){
             return res.status(404).json({
             message: "user not found"

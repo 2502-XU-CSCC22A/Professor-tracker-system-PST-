@@ -19,11 +19,23 @@ import StatusModal from "../components/StatusModal";
 import { formatScheduleTimeRange, parseScheduleTimeRange } from "../utils/scheduleTime";
 
 
-const formatDepartment = (department = "") =>
-  String(department)
-    .trim()
-    .toLowerCase()
+const departmentMap = {
+  ccs: "College of Computer Studies",
+  engineering: "College of Engineering",
+  arts_sciences: "College of Arts & Sciences",
+  medicine: "School of Medicine",
+  nursing: "College of Nursing",
+  agriculture: "College of Agriculture",
+  education: "College of Education",
+  law: "School of Law",
+  ADMIN: "ADMIN"
+};
+
+const formatDepartment = (department = "") => {
+  const deptKey = String(department).trim().toLowerCase();
+  return departmentMap[deptKey] || String(department).trim().toLowerCase()
     .replace(/\b\w/g, (char) => char.toUpperCase());
+};
 
 const normalizeScheduleType = (type = "") => (String(type).trim().toLowerCase() === "lab" ? "lab" : "lecture");
 const formatScheduleType = (type = "") => (normalizeScheduleType(type) === "lab" ? "Lab" : "Lecture");
@@ -126,14 +138,11 @@ const ProfessorPage = () => {
               {welcomeName.charAt(0)}
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-800">{displayName}</h1>
+              <h1 className="text-3xl font-bold text-[var(--color-primary)]">{displayName}</h1>
               <div className="flex items-center gap-2 text-gray-500 mt-1 mb-2 text-sm">
                 <Building2 size={16} />
-                <span>Department of {departmentName}</span>
+                <span>{departmentName}</span>
               </div>
-              <span className="bg-gray-100 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold">
-                Tenured Professor
-              </span>
             </div>
           </div>
 
@@ -152,14 +161,13 @@ const ProfessorPage = () => {
                 );
               })()}
             </button>
-            {/* <span className="text-[11px] text-gray-400 italic mt-2 pr-2">Last sync: 2 minutes ago</span> */}
           </div>
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-end gap-4">
           <div>
-            <p className="font-bold opacity-60 uppercase text-sm">Faculty Dashboard</p>
-            <h2 className="text-5xl font-black mt-2 text-gray-800">
+            <p className="font-bold opacity-80 uppercase text-[var(--color-primary)]">Faculty Dashboard</p>
+            <h2 className="text-5xl font-black mt-2 text-[var(--color-primary)]">
               Welcome Back, {welcomeName}!
             </h2>
             <p className="text-gray-600 text-sm">
@@ -179,8 +187,8 @@ const ProfessorPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
           <div className="lg:col-span-2 bg-white rounded-[35px] p-8 shadow-2xl border border-gray-50">
             <div className="flex justify-between items-center mb-8">
-              <h3 className="text-2xl font-black text-gray-800">My Schedule</h3>
-              <div className="flex items-center gap-2 text-gray-500 font-medium text-sm">
+              <h3 className="text-2xl font-black text-[var(--color-primary)]">My Schedule</h3>
+              <div className="flex items-center gap-2 text-grey-500 font-medium text-sm">
                 <Calendar size={18} />
                 {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
               </div>
@@ -198,7 +206,7 @@ const ProfessorPage = () => {
               ) : (
                 sortedSchedules.map((item, index) => (
                   <div key={item._id || index} className="flex gap-8 relative pb-8 last:pb-0">
-                    <div className="w-16 pt-3 text-sm font-bold text-gray-600 shrink-0 bg-white z-10">
+                    <div className="w-16 pt-3 text-sm font-bold text-grey-500 shrink-0 bg-white z-10">
                       {formatScheduleTimeRange(item.time)}
                     </div>
 
@@ -208,7 +216,7 @@ const ProfessorPage = () => {
                       className="flex-1 rounded-xl p-5 flex flex-col md:flex-row justify-between items-start md:items-center border border-gray-100 bg-white transition-all text-left hover:border-blue-500 hover:shadow-md"
                     >
                       <div>
-                        <h4 className="text-lg font-bold text-gray-800 mb-2">{item.subject}</h4>
+                        <h4 className="text-lg font-bold text-[var(--color-primary)] mb-2">{item.subject}</h4>
                         <div className="flex gap-5 text-gray-500 text-sm font-medium">
                           <span className="flex items-center gap-1.5">
                             <MapPin size={16} className="text-gray-400" />
@@ -221,7 +229,7 @@ const ProfessorPage = () => {
                         </div>
                       </div>
 
-                      <span className="mt-3 md:mt-0 text-[10px] font-bold px-2.5 py-1 rounded tracking-wide bg-gray-100 text-gray-500">
+                      <span className="mt-3 md:mt-0 text-[10px] font-bold px-2.5 py-1 rounded tracking-wide bg-[var(--color-primary)] text-[var(--color-surface)]">
                         SCHEDULED
                       </span>
                     </button>
@@ -229,32 +237,23 @@ const ProfessorPage = () => {
                 ))
               )}
             </div>
-
-            {schedules.length > 3 && (
-              <button className="w-full mt-6 pt-6 flex items-center justify-center gap-1 text-blue-600 font-bold text-sm hover:text-blue-700 transition-colors">
-                Expand Full Schedule
-                <ChevronDown size={18} />
-              </button>
-            )}
           </div>
 
           <div className="flex flex-col gap-6">
-            <button
-              onClick={() => setShowModal(true)}
-              className="w-full bg-white rounded-[25px] p-5 shadow-md border border-gray-50 flex items-center justify-center gap-3 text-gray-800 hover:text-blue-600 font-bold text-lg hover:shadow-lg transition-all"
-            >
-              <Calendar size={22} className="text-blue-600" />
-              Add Schedule
-            </button>
-
-            <div className="bg-white rounded-[25px] shadow-md border border-gray-50 flex relative">
-              <div className="flex-1 p-6 text-center border-r border-gray-100">
-                <p className="text-[10px] font-bold text-gray-400 tracking-wider mb-2">LABS</p>
-                <p className="text-4xl font-black text-gray-800">{String(typeTotals.lab).padStart(2, "0")}</p>
+            <div className="bg-white rounded-[25px] shadow-md border border-gray-50 flex flex-col relative">
+              <div className="p-6 text-center border-b border-gray-100">
+                <h3 className="text-2xl font-black text-[var(--color-primary)]">Class Summary</h3>
               </div>
-              <div className="flex-1 p-6 text-center">
-                <p className="text-[10px] font-bold text-gray-400 tracking-wider mb-2">LECTURE</p>
-                <p className="text-4xl font-black text-gray-800">{String(typeTotals.lecture).padStart(2, "0")}</p>
+              
+              <div className="flex">
+                <div className="flex-1 p-6 text-center border-r border-gray-100">
+                  <p className="text-[10px] font-bold text-gray-400 tracking-wider mb-2">LABS</p>
+                  <p className="text-4xl font-black text-gray-800">{String(typeTotals.lab).padStart(2, "0")}</p>
+                </div>
+                <div className="flex-1 p-6 text-center">
+                  <p className="text-[10px] font-bold text-gray-400 tracking-wider mb-2">LECTURES</p>
+                  <p className="text-4xl font-black text-gray-800">{String(typeTotals.lecture).padStart(2, "0")}</p>
+                </div>
               </div>
 
               <button
