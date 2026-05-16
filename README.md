@@ -8,7 +8,7 @@ Containerization: Docker
 
 
 Deployment:
-https://professor-tracker-system-pst-1.onrender.com
+https://professor-tracker-system.onrender.com
 
 
 Contributors:
