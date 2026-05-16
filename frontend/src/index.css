@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+
+:root {
+  --color-primary: #004a99;
+  --color-surface: #FFFFFF;
+  --color-text-main: #333333;
+  --color-text-muted: #666666;
+}
+
+
+@layer base {
+  body {
+    background: #F6F9FC;
+    margin: 0;
+    min-height: 100vh;
+
+ 
+    color: var(--color-text-main);
+
+    @apply font-sans antialiased;
+  }
+}
+
+
+@layer components {
+  .avatar-circle {
+    @apply w-12 h-12 rounded-full bg-gray-200 border-2 border-white shadow-sm;
+  }
+
+  .status-pill {
+    @apply px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider transition-all;
+  }
+
+  .admin-card {
+  @apply bg-white p-6 rounded-2xl border border-gray-100 shadow-sm;
+    }
+}
+
+/* Toast */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.35s ease-out;
+}
