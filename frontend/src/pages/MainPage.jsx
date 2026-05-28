@@ -87,6 +87,39 @@ export default function MainPage() {
    };
   };
 
+  const fetchAllProfessors = async () => {
+    if (allProfessors.length > 0) return;
+
+   try {
+     const departments = [
+       "ccs",
+       "engineering",
+       "arts_sciences",
+       "medicine",
+       "nursing",
+       "agriculture",
+       "education",
+       "law",
+     ];
+
+    const responses = await Promise.all(
+      departments.map((dept) => api.get(`/users/department/${dept}`))
+    );
+
+    const formatted = responses.flatMap((res) =>
+      res.data.map((user) => ({
+        name: `${user.firstName} ${user.lastName}`,
+        username: user.username,
+      }))
+    );
+
+    setAllProfessors(formatted);
+
+  } catch (error) {
+    console.log(error);
+  }
+};
+
   useEffect(() => {
     const fetchProfessors = async () => {
       try {
@@ -140,44 +173,8 @@ export default function MainPage() {
     };
 
     fetchProfessorSchedule();
-  }, [selectedProfessor, professorList]);
+  }, [selectedProfessor]);
 
-  useEffect(() => {
-   const fetchAllProfessors = async () => {
-    try {
-      const departments = [
-        "ccs",
-        "engineering",
-        "arts_sciences",
-        "medicine",
-        "nursing",
-        "agriculture",
-        "education",
-        "law",
-      ];
-
-      const responses = await Promise.all(
-        departments.map((dept) =>
-          api.get(`/users/department/${dept}`)
-        )
-      );
-
-      const formatted = responses.flatMap((res) =>
-        res.data.map((user) => ({
-          name: `${user.firstName} ${user.lastName}`,
-          username: user.username,
-        }))
-      );
-
-      setAllProfessors(formatted);
-
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  fetchAllProfessors();
-}, []);
 
   const getScheduleItem = (day, time) => {
     const slotStart = gridTimeToMinutes(time);
@@ -217,7 +214,7 @@ export default function MainPage() {
                 type="text"
                 placeholder="FirstName LastName"
                 value={searchName}
-                onChange={(e) => setSearchName(e.target.value)}
+                onChange={(e) => {setSearchName(e.target.value);fetchAllProfessors();}}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleSearch();
                 }}
