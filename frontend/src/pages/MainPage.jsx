@@ -23,8 +23,10 @@ export default function MainPage() {
   const [professorList, setProfessorList] = useState([]);
   const [selectedProfessor, setSelectedProfessor] = useState("");
   const [scheduleData, setScheduleData] = useState([]);
+  const [selectedSchedule, setSelectedSchedule] = useState(null);
+  const [allProfessors, setAllProfessors] = useState([]);
 
-  const ROW_HEIGHT = 70;
+  const ROW_HEIGHT = 100;
 
   const times = [
     "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM",
@@ -38,10 +40,18 @@ export default function MainPage() {
     "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY",
   ];
 
-  const timeToMinutes = (time) => {
-    const [hour, minute] = time.split(":").map(Number);
+  const timeToMinutes = (time = "") => {
+     const clean = time.trim().toLowerCase();
+     const match = clean.match(/^(\d{1,2}):(\d{2})\s*(am|pm)?$/);
+     if (!match) return 0;
+      let hour = Number(match[1]);
+      const minute = Number(match[2]);
+       const suffix = match[3];
+
+    if (suffix === "pm" && hour !== 12) hour += 12;
+    if (suffix === "am" && hour === 12) hour = 0;
     return hour * 60 + minute;
-  };
+};
 
   const formatTime = (time) => {
    let [hour, minute] = time.split(":").map(Number);
@@ -73,7 +83,7 @@ export default function MainPage() {
    const duration = scheduleEnd - scheduleStart;
    return {
      top: `${(minutesFromHourStart / 60) * ROW_HEIGHT + 6}px`,
-     height: `${(duration / 60) * ROW_HEIGHT - 12}px`,
+     height: `${Math.max((duration / 60) * ROW_HEIGHT - 12, 70)}px`,
    };
   };
 
@@ -89,8 +99,9 @@ export default function MainPage() {
 
         setProfessorList(formatted);
 
+
         if (formatted.length > 0) {
-          setSelectedProfessor(formatted[0].name);
+           setSelectedProfessor(formatted[0].name);
         } else {
           setSelectedProfessor("");
           setScheduleData([]);
@@ -109,12 +120,12 @@ export default function MainPage() {
 
       try {
         const res = await api.get(`/schedules/public/search?name=${encodeURIComponent(selectedProfessor)}`);
-
         const formatted = res.data.schedules.map((item) => ({
           day: item.day.toUpperCase(),
           startTime: item.time.split("-")[0].trim(),
           endTime: item.time.split("-")[1].trim(),
           professor: selectedProfessor,
+          subject: item.subject,
           timeRange: formatTimeRange(item.time),
           room: `${item.room} (${item.type.toUpperCase()})`,
           color: item.type === "lab" ? "bg-[#4F8CFF]" : "bg-[#5667A6]",
@@ -129,7 +140,44 @@ export default function MainPage() {
     };
 
     fetchProfessorSchedule();
-  }, [selectedProfessor]);
+  }, [selectedProfessor, professorList]);
+
+  useEffect(() => {
+   const fetchAllProfessors = async () => {
+    try {
+      const departments = [
+        "ccs",
+        "engineering",
+        "arts_sciences",
+        "medicine",
+        "nursing",
+        "agriculture",
+        "education",
+        "law",
+      ];
+
+      const responses = await Promise.all(
+        departments.map((dept) =>
+          api.get(`/users/department/${dept}`)
+        )
+      );
+
+      const formatted = responses.flatMap((res) =>
+        res.data.map((user) => ({
+          name: `${user.firstName} ${user.lastName}`,
+          username: user.username,
+        }))
+      );
+
+      setAllProfessors(formatted);
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  fetchAllProfessors();
+}, []);
 
   const getScheduleItem = (day, time) => {
     const slotStart = gridTimeToMinutes(time);
@@ -144,6 +192,10 @@ export default function MainPage() {
     });
   };
 
+  const searchSuggestions = allProfessors.filter((professor) =>
+  professor.name.toLowerCase().includes(searchName.toLowerCase().trim())
+);
+
   const handleSearch = () => {
     const normalized = searchName.trim().replace(/\s+/g, " ");
     if (!normalized) return;
@@ -152,51 +204,66 @@ export default function MainPage() {
 
   return (
     <div className="min-h-screen font-sans text-gray-800 flex flex-col">
-      <header className="w-full bg-white/95 backdrop-blur border-b border-[#D8E2F0] shadow-sm">
-        <div className="w-full max-w-[1400px] mx-auto px-6 md:px-10 py-2">
-          <div className="flex items-center gap-6">
-            <div className="shrink-0 min-w-[140px]" />
-              <div className="flex-1 flex justify-center">
-                <div className="flex items-center w-full max-w-2xl bg-white rounded-2xl border border-[#D8E2F0] shadow-sm overflow-hidden">
-                  <div className="flex items-center flex-1 px-4 py-3">
-                    <SearchIcon className="w-5 h-5 text-[#667085]" />
-                    <input
-                      type="text"
-                      placeholder="FirstName  LastName"
-                      value={searchName}
-                      onChange={(e) => setSearchName(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") handleSearch();
-                      }}
-                      className="flex-1 bg-transparent border-none outline-none px-3 text-sm text-[#1F2937] placeholder-[#667085]"
-                    />
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={handleSearch}
-                    className="self-stretch bg-[var(--color-primary)] hover:bg-[#274B78] text-white font-semibold text-sm px-7 border-l border-[#D8E2F0]"
-                  >
-                    Search
-                  </button>
-                </div>
-              </div>
-            <div className="shrink-0 flex flex-col items-end justify-center min-w-[140px]">
-              <span className="text-sm font-medium text-[#667085] mb-1">
-                A professor?
-              </span>
-
-              <button
-                onClick={() => navigate("/login")}
-                className="bg-white hover:bg-[#F0F4FA] text-[var(--color-primary)] border border-[#D8E2F0] font-semibold text-sm px-5 py-2 rounded-xl shadow-sm"
-              >
-                Login
-              </button>
+       <header className="w-full bg-white/95 backdrop-blur border-b border-[#D8E2F0] shadow-sm relative z-[9999]">
+  <div className="w-full max-w-[1400px] mx-auto px-6 md:px-10 py-2">
+    <div className="flex items-center gap-6">
+      <div className="shrink-0 min-w-[140px]" />
+      <div className="flex-1 flex justify-center">
+        <div className="relative w-full max-w-2xl">
+          <div className="flex items-center w-full bg-white rounded-2xl border border-[#D8E2F0] shadow-sm overflow-hidden">
+            <div className="flex items-center flex-1 px-4 py-3">
+              <SearchIcon className="w-5 h-5 text-[#667085]" />
+              <input
+                type="text"
+                placeholder="FirstName LastName"
+                value={searchName}
+                onChange={(e) => setSearchName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleSearch();
+                }}
+                className="flex-1 bg-transparent border-none outline-none px-3 text-sm text-[#1F2937] placeholder-[#667085]"/>
             </div>
+            <button
+              type="button"
+              onClick={handleSearch}
+              className="self-stretch bg-[var(--color-primary)] hover:bg-[#274B78] text-white font-semibold text-sm px-7 border-l border-[#D8E2F0]">
+              Search
+            </button>
           </div>
+          {searchName && searchSuggestions.length > 0 && (
+            <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-[#D8E2F0] rounded-xl shadow-lg z-[9999] max-h-40 overflow-y-auto">
+              {searchSuggestions.map((professor) => (
+                <button
+                  key={professor.username}
+                  type="button"
+                  onClick={() => {
+                    setSearchName(professor.name);
+                    navigate(`/search-professor?name=${encodeURIComponent(professor.name)}`);
+                  }}
+                  className="w-full text-left px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-100">
+                  {professor.name}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
-      </header>
+      </div>
+      <div className="shrink-0 flex flex-col items-end justify-center min-w-[140px]">
+        <span className="text-sm font-medium text-[#667085] mb-1">
+          A professor?
+        </span>
+        <button
+          onClick={() => navigate("/login")}
+          className="bg-white hover:bg-[#F0F4FA] text-[var(--color-primary)] border border-[#D8E2F0] font-semibold text-sm px-5 py-2 rounded-xl shadow-sm"
+        >
+          Login
+        </button>
 
+      </div>
+
+    </div>
+  </div>
+</header>
       <main className="flex-1 w-full max-w-[1400px] mx-auto px-4 md:px-10 pt-6 pb-12 flex flex-col">
         <div className="flex flex-col md:flex-row md:items-center gap-6 mb-6 mt-4">
           <h1 className="text-2xl md:text-3xl font-bold text-[var(--color-primary)] uppercase tracking-tight">
@@ -231,8 +298,8 @@ export default function MainPage() {
               ) : (
                 professorList.map((professor) => (
                   <option key={professor.username} value={professor.name}>
-                    {professor.name}
-                  </option>
+                     {professor.name}
+                   </option>
                 ))
               )}
             </select>
@@ -280,21 +347,25 @@ export default function MainPage() {
                         {item && (
                           <div
                             style={getCardStyle(item)}
+                            onClick={() => setSelectedSchedule(item)}
                             className={`
                               ${item.color} ${item.text}
-                              absolute left-1.5 right-1.5 rounded-lg p-3 shadow-sm z-10
-                              flex flex-col items-center justify-center text-center gap-1
-                            `}
-                          >
-                            <div className="font-bold text-[13px] leading-tight">
+                              absolute left-1.5 right-1.5 rounded-lg px-2 py-1 shadow-sm z-10
+                              flex flex-col items-center justify-center text-center gap-1 cursor-pointer`}>
+
+                            <div className="font-bold text-[12px] leading-tight truncate w-full">
                               {item.professor}
                             </div>
 
-                            <div className="text-[11px] leading-tight">
+                            <div className="text-[10px] leading-tight truncate w-full">
                               {item.timeRange}
                             </div>
 
-                            <div className="text-[11px] font-semibold leading-tight">
+                            <div className="text-[10px] font-semibold leading-tight truncate w-full">
+                              {item.subject}
+                            </div>
+
+                            <div className="text-[10px] font-semibold leading-tight truncate w-full">
                               {item.room}
                             </div>
                           </div>
@@ -307,6 +378,22 @@ export default function MainPage() {
             </div>
           </div>
         </div>
+        {selectedSchedule && (
+          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 w-[350px] shadow-xl relative">
+            <button
+             onClick={() => setSelectedSchedule(null)}
+             className="absolute top-3 right-3 text-gray-500 hover:text-black">✕</button>
+          <h2 className="text-xl font-bold mb-4 text-[var(--color-primary)]">Schedule Detail</h2>
+        <div className="space-y-2 text-sm">
+          <p><strong>Professor:</strong> {selectedSchedule.professor}</p>
+          <p><strong>Subject:</strong> {selectedSchedule.subject}</p>
+          <p><strong>Time:</strong> {selectedSchedule.timeRange}</p>
+          <p><strong>Room:</strong> {selectedSchedule.room}</p>
+      </div>
+    </div>
+  </div>
+)}
       </main>
     </div>
   );
