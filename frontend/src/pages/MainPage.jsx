@@ -26,7 +26,7 @@ export default function MainPage() {
   const [selectedSchedule, setSelectedSchedule] = useState(null);
   const [allProfessors, setAllProfessors] = useState([]);
 
-  const ROW_HEIGHT = 100;
+  const ROW_HEIGHT = 80;
 
   const times = [
     "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM",
@@ -307,7 +307,7 @@ export default function MainPage() {
           </div>
         </div>
 
-        <div className="rounded-xl shadow-md border border-gray-300 overflow-x-auto flex-1">
+        <div className="rounded-xl shadow-md border border-gray-300 overflow-x-auto">
           <div className="min-w-[1000px]">
             <div className="grid grid-cols-[100px_repeat(7,1fr)] bg-[var(--color-primary)] border-b-2 border-[#2A4D78]">
               <div className="p-4 flex items-center justify-center text-sm font-bold text-[#FBFBFB] border-r border-[#2A4D78] uppercase">
