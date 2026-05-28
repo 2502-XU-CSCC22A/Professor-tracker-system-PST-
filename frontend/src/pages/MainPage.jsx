@@ -43,6 +43,18 @@ export default function MainPage() {
     return hour * 60 + minute;
   };
 
+  const formatTime = (time) => {
+   let [hour, minute] = time.split(":").map(Number);
+   const suffix = hour >= 12 ? "PM" : "AM";
+   hour = hour % 12 || 12;
+   return `${hour}:${String(minute).padStart(2, "0")} ${suffix}`;
+  };
+
+  const formatTimeRange = (range) => {
+   const [start, end] = range.split("-").map((t) => t.trim());
+   return `${formatTime(start)} - ${formatTime(end)}`;
+  };
+
   const gridTimeToMinutes = (time) => {
     const [hourPart, suffix] = time.split(" ");
     let hour = Number(hourPart.split(":")[0]);
@@ -54,16 +66,15 @@ export default function MainPage() {
   };
 
   const getCardStyle = (item) => {
-    const scheduleStart = timeToMinutes(item.startTime);
-    const scheduleEnd = timeToMinutes(item.endTime);
-
-    const startHour = Math.floor(scheduleStart / 60);
-    const endHour = Math.ceil(scheduleEnd / 60);
-
-    return {
-      top: "6px",
-      height: `${(endHour - startHour) * ROW_HEIGHT - 12}px`,
-    };
+   const scheduleStart = timeToMinutes(item.startTime);
+   const scheduleEnd = timeToMinutes(item.endTime);
+   const startHour = Math.floor(scheduleStart / 60) * 60;
+   const minutesFromHourStart = scheduleStart - startHour;
+   const duration = scheduleEnd - scheduleStart;
+   return {
+     top: `${(minutesFromHourStart / 60) * ROW_HEIGHT + 6}px`,
+     height: `${(duration / 60) * ROW_HEIGHT - 12}px`,
+   };
   };
 
   useEffect(() => {
@@ -104,7 +115,7 @@ export default function MainPage() {
           startTime: item.time.split("-")[0].trim(),
           endTime: item.time.split("-")[1].trim(),
           professor: selectedProfessor,
-          timeRange: item.time,
+          timeRange: formatTimeRange(item.time),
           room: `${item.room} (${item.type.toUpperCase()})`,
           color: item.type === "lab" ? "bg-[#4F8CFF]" : "bg-[#5667A6]",
           text: "text-white",
